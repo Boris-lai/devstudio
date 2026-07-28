@@ -96,7 +96,7 @@ export default async function HomePage() {
           <Button
             className="h-auto rounded-lg px-5.5 py-3"
             nativeButton={false}
-            render={<Link href="/about">聊聊你的專案</Link>}
+            render={<Link href="/about#contact">聊聊你的專案</Link>}
           />
           <Button
             variant="outline"
@@ -149,10 +149,7 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/*
-        結尾 CTA band。聯絡目的地屬 Chunk 8：
-        「取得報價」先連 /about，LINE 與 email 先用 # 佔位。
-      */}
+      {/* 結尾 CTA band。LINE 連結還沒拿到，暫時留 # 佔位。 */}
       <section className="flex flex-col items-center gap-6 border-t border-border bg-muted px-6 py-16 text-center">
         <p className={`${EYEBROW} text-primary`}>開始合作</p>
 
@@ -170,7 +167,7 @@ export default async function HomePage() {
           <Button
             className="h-auto rounded-lg px-5.5 py-3"
             nativeButton={false}
-            render={<Link href="/about">取得報價</Link>}
+            render={<Link href="/about#contact">取得報價</Link>}
           />
           <Button
             variant="outline"
@@ -181,10 +178,10 @@ export default async function HomePage() {
         </div>
 
         <a
-          href="#"
+          href="mailto:borislai0713@gmail.com"
           className={`${EYEBROW} rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50`}
         >
-          或直接寄信給我
+          borislai0713@gmail.com
         </a>
       </section>
     </div>
