@@ -38,6 +38,26 @@ export async function getPublishedPosts(): Promise<PostListItem[]> {
 }
 
 /**
+ * 首頁的最新文章，取前幾篇。排序規則與文章列表一致。
+ */
+export async function getLatestPosts(limit = 3): Promise<PostListItem[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select(LIST_COLUMNS)
+    .eq("published", true)
+    .order("published_at", { ascending: false, nullsFirst: false })
+    .limit(limit)
+
+  if (error) {
+    throw new Error(`讀取最新文章失敗：${error.message}`)
+  }
+
+  return data
+}
+
+/**
  * 依 slug 撈單筆已發布的文章。查無資料回傳 null，由呼叫端決定要不要 notFound()。
  */
 export async function getPostBySlug(slug: string): Promise<Post | null> {

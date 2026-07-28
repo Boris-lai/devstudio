@@ -93,12 +93,51 @@
 
 ---
 
-## 7. 從設計稿丟棄的東西（那些只是稿子的鷹架）
+## 7. 首頁
 
-最上面的 masthead、`TOKENS` 圖例、字級 legend、對角線 hatch 的封面佔位、`cover_image` 與 `no cover · fallback` 這些**除錯標籤字**、以及假名「林知遠」——都不是網站的一部分，落地時一律丟掉。只取三個畫面：卡片、作品內頁、文章內頁。
+外殼（header/nav/footer）一律由 `(site)/layout.tsx` 提供，**首頁不要自己重做**，否則會出現雙 header/footer。作品卡與文章卡**重用既有的 `ProjectCard` / `PostCard`**，不照設計稿的簡化卡重畫。首頁只採用設計稿的 hero、區塊標題框架、CTA band 與 badge。
+
+### Hero
+
+- mono eyebrow（`--primary` 色）：「全端開發 · 前端與產品接案」。
+- h1：桌機約 **58**、行高 **1.28**、字重 **700**、`text-wrap: pretty`；窄螢幕用 `clamp()` 縮放，不要硬切斷點。
+- 自介段：`muted-foreground`、17 / 1.85、`max-width ~620`。
+- 雙 CTA：主要 = 實心 `--primary`；次要 = outline「看作品 →」（→ `/work`）。
+- 接案 badge 收在 CTA 下方。
+
+### 接案狀態 badge
+
+由 `getSiteSettings().accepting_work` 驅動，**兩種狀態都要做**：
+
+| 狀態 | 圓點 | 文字 |
+|---|---|---|
+| 開放 | `--primary` 圓點 + glow ring（`box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 20%, transparent)`） | 目前開放接案 |
+| 未開放 | `muted-foreground` 圓點，無 glow | 暫不接案 |
+
+外框：`bg-card` + `1px border` + 圓角 999 + mono 12。**查無設定（`null`）時整個 badge 不顯示** —— 與其猜一個狀態，不如不掛，免得對外顯示錯誤的接案訊息。
+
+### 精選作品 / 最新文章區塊
+
+- header 列：左邊 mono eyebrow（`--primary` 色，「近期案例」／「筆記與心得」）+ h2 **32/700**；右邊 mono 連結「查看全部作品 →」／「看更多文章 →」。窄螢幕自動換行。
+- 網格：桌機 `repeat(3, 1fr)`、窄螢幕收合單欄，gap 22。**與 `/work`、`/blog` 列表頁的 `auto-fill` 網格不同** —— 首頁固定三欄是刻意的，讓版面節奏穩定。
+- 空狀態沿用第 4 節的 `EmptyState`。
+
+### 結尾 CTA band
+
+`--muted`（surface-2）底 + **上緣 border**、內容置中：mono eyebrow +「有專案想聊聊？」32/700 + 一段文案（`max-width ~620`）+ 兩顆按鈕（「取得報價」實心 `--primary`、「加 LINE 聯絡」outline）+ 一行 mono 的 email 連結。
+
+聯絡目的地屬 **Chunk 8**：目前「取得報價」連 `/about`，LINE 與 email 先用 `#` 佔位。
 
 ---
 
-## 8. 落地原則
+## 8. 從設計稿丟棄的東西（那些只是稿子的鷹架）
+
+最上面的 masthead、`TOKENS` 圖例、字級 legend、對角線 hatch 的封面佔位、`cover_image` 與 `no cover · fallback` 這些**除錯標籤字**、以及假名「林知遠」——都不是網站的一部分，落地時一律丟掉。只取三個畫面：卡片、作品內頁、文章內頁。
+
+首頁設計稿同理，這些也一律丟棄：`1a` / `1b` 之類的**編號標籤**、底部的「接案狀態徽章 · 交接參考」區、hatch 縮圖佔位、假名「陳彥廷」與假 email，以及設計稿**自帶的 header/nav 與 footer**（外殼由 `(site)/layout.tsx` 提供）。
+
+---
+
+## 9. 落地原則
 
 資料接線、component 拆分、RLS、深色模式切換鈕都已在 Chunk 2–4 完成，這份設計改的是**外觀**。落地 = 在既有的 `ProjectCard` / `PostCard` / 列表頁 / 內頁 / `Markdown` 上換皮，優先用 Tailwind utility + ShadCN 元件綁 token，不要用寫死的 inline style，不要動資料流。

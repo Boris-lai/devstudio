@@ -38,6 +38,45 @@ export async function getPublishedProjects(): Promise<ProjectListItem[]> {
 }
 
 /**
+ * 首頁精選作品：published && featured，依 sort_order 由小到大。
+ *
+ * 若一筆 featured 都沒有，就 fallback 撈最新發布的幾筆 —— 首頁的作品區
+ * 不該因為忘記勾 featured 就整塊空掉。
+ */
+export async function getFeaturedProjects(
+  limit = 3,
+): Promise<ProjectListItem[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select(LIST_COLUMNS)
+    .eq("published", true)
+    .eq("featured", true)
+    .order("sort_order", { ascending: true })
+    .limit(limit)
+
+  if (error) {
+    throw new Error(`讀取精選作品失敗：${error.message}`)
+  }
+
+  if (data.length > 0) return data
+
+  const { data: fallback, error: fallbackError } = await supabase
+    .from("projects")
+    .select(LIST_COLUMNS)
+    .eq("published", true)
+    .order("created_at", { ascending: false })
+    .limit(limit)
+
+  if (fallbackError) {
+    throw new Error(`讀取作品失敗：${fallbackError.message}`)
+  }
+
+  return fallback
+}
+
+/**
  * 依 slug 撈單筆已發布的作品。查無資料回傳 null，由呼叫端決定要不要 notFound()。
  */
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
