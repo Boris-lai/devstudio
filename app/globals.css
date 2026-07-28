@@ -1,26 +1,279 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Tailwind v4 的 plugin 載入方式，不需要 tailwind.config.ts */
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+  --color-accent-soft: var(--accent-soft);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ---------------------------------------------------------------------------
+ * 設計 token（見 DESIGN.md 第 1 節）
+ *
+ * 設計稿的語意 token 直接接管 ShadCN 既有 token，整站與所有 ShadCN 元件共用
+ * 一套，深色模式靠 .dark class 自動生效。
+ *
+ * ⚠️ 設計稿說的「accent（板岩藍點綴）」= ShadCN 的 --primary，不是 --accent。
+ *    ShadCN 的 --accent/--accent-foreground 是 hover 淡底，跟著 surface-2 走。
+ * ------------------------------------------------------------------------- */
+:root {
+  /* bg / surface / surface-2 */
+  --background: #fbfbfa;
+  --card: #ffffff;
+  --popover: #ffffff;
+  --secondary: #f4f4f2;
+  --muted: #f4f4f2;
+  --accent: #f4f4f2;
+
+  /* fg / fg-2 */
+  --foreground: #1a1a19;
+  --card-foreground: #1a1a19;
+  --popover-foreground: #1a1a19;
+  --secondary-foreground: #1a1a19;
+  --accent-foreground: #1a1a19;
+  --muted-foreground: #6f6f69;
+
+  /* 板岩藍點綴 */
+  --primary: oklch(0.52 0.085 236);
+  --primary-foreground: #ffffff;
+  --ring: oklch(0.52 0.085 236);
+  --accent-soft: oklch(0.965 0.016 236);
+
+  /* 線條 */
+  --border: #e6e6e1;
+  --input: #e6e6e1;
+
+  /* 程式碼區塊底色：亮暗都用 highlight.js github-dark 的深底 */
+  --code-bg: #0d1117;
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  /* bg / surface / surface-2 */
+  --background: #111110;
+  --card: #1a1a19;
+  --popover: #1a1a19;
+  --secondary: #232322;
+  --muted: #232322;
+  --accent: #232322;
+
+  /* fg / fg-2 */
+  --foreground: #f3f3f0;
+  --card-foreground: #f3f3f0;
+  --popover-foreground: #f3f3f0;
+  --secondary-foreground: #f3f3f0;
+  --accent-foreground: #f3f3f0;
+  --muted-foreground: #a3a39c;
+
+  /* 板岩藍點綴 */
+  --primary: oklch(0.74 0.09 236);
+  --primary-foreground: #111110;
+  --ring: oklch(0.74 0.09 236);
+  --accent-soft: oklch(0.3 0.035 236);
+
+  /* 線條 */
+  --border: #2f2f2c;
+  --input: #2f2f2c;
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
+/* ---------------------------------------------------------------------------
+ * 文章／作品內文排版（見 DESIGN.md 第 6 節）
+ *
+ * 刻意寫成「未分層」的 CSS：@tailwindcss/typography 的輸出在 @layer 裡，
+ * 而未分層樣式在 cascade 中一律勝過分層樣式（與 specificity 無關）。
+ * 這樣才蓋得掉 plugin 的 .prose 預設值，也蓋得掉 dark:prose-invert 的色票 ——
+ * 顏色全部改綁我們自己的 token，亮暗兩邊都用同一套。
+ * ------------------------------------------------------------------------- */
+.prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted-foreground);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--border);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--muted-foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted-foreground);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-bg: var(--code-bg);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+.prose h2 {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.prose h3 {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* inline code：小 chip。typography 預設會用 ::before/::after 補上反引號，拿掉。 */
+.prose :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  font-weight: 500;
+  background: var(--muted);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 6px;
+  padding: 2px 7px;
+}
+
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
+/* 程式碼區塊：容器負責圓角與捲動，配色交給 highlight.js 的 github-dark */
+.prose pre {
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+}
+
+.prose pre code,
+.prose pre code.hljs {
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  line-height: 1.75;
+}
+
+/* blockquote：左邊一條細線，不要斜體與彎引號 */
+.prose blockquote {
+  border-left-width: 3px;
+  border-left-color: var(--border);
+  color: var(--muted-foreground);
+  font-style: normal;
+  font-weight: 400;
+}
+
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: none;
+}
+
+/* table：外框圓角 + 表頭 surface-2 底 */
+.prose table {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-size: 15px;
+}
+
+.prose thead {
+  background: var(--muted);
+}
+
+.prose thead th {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 0.9rem;
+}
+
+.prose tbody td {
+  border-top: 1px solid var(--border);
+  padding: 0.6rem 0.9rem;
+}
+
+.prose tbody tr:first-child td {
+  border-top: none;
 }
