@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 打包給外部檢視用的原始碼壓縮檔，不進版控
+*.zip
