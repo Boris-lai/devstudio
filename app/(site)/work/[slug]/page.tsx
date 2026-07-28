@@ -7,6 +7,7 @@ import { Markdown } from "@/components/markdown/Markdown"
 import { Button } from "@/components/ui/button"
 import { TechPills } from "@/components/work/TechPills"
 import { getProjectBySlug } from "@/lib/queries/projects"
+import { absoluteUrl } from "@/lib/site"
 
 type WorkDetailPageProps = {
   params: Promise<{ slug: string }>
@@ -22,9 +23,25 @@ export async function generateMetadata({
     return { title: "找不到作品" }
   }
 
+  const description = project.summary ?? undefined
+  const url = absoluteUrl(`/work/${project.slug}`)
+
   return {
     title: project.title,
-    description: project.summary ?? undefined,
+    description,
+    alternates: { canonical: `/work/${project.slug}` },
+    openGraph: {
+      type: "article",
+      title: project.title,
+      description,
+      url,
+      images: project.cover_url ? [project.cover_url] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: project.title,
+      description,
+    },
   }
 }
 

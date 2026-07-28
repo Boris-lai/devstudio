@@ -76,6 +76,24 @@ export async function getFeaturedProjects(
   return fallback
 }
 
+export type SitemapEntry = { slug: string; updated_at: string }
+
+/** sitemap 專用：所有已發布作品的 slug 與 updated_at。 */
+export async function getProjectSitemapEntries(): Promise<SitemapEntry[]> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from("projects")
+    .select("slug, updated_at")
+    .eq("published", true)
+
+  if (error) {
+    throw new Error(`讀取作品 sitemap 資料失敗：${error.message}`)
+  }
+
+  return data
+}
+
 /**
  * 依 slug 撈單筆已發布的作品。查無資料回傳 null，由呼叫端決定要不要 notFound()。
  */

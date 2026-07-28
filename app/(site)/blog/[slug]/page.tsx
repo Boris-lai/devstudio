@@ -7,6 +7,7 @@ import { CommentsSection } from "@/components/comments/CommentsSection"
 import { Markdown } from "@/components/markdown/Markdown"
 import { estimateReadingMinutes, formatPublishedDate } from "@/lib/format"
 import { getPostBySlug } from "@/lib/queries/posts"
+import { absoluteUrl, SITE_NAME } from "@/lib/site"
 
 type BlogDetailPageProps = {
   params: Promise<{ slug: string }>
@@ -22,9 +23,27 @@ export async function generateMetadata({
     return { title: "找不到文章" }
   }
 
+  // excerpt 可能是空字串（seed 資料就有這種），空字串當作沒有描述
+  const description = post.excerpt?.trim() ? post.excerpt : undefined
+  const url = absoluteUrl(`/blog/${post.slug}`)
+
   return {
     title: post.title,
-    description: post.excerpt ?? undefined,
+    description,
+    alternates: { canonical: `/blog/${post.slug}` },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description,
+      url,
+      publishedTime: post.published_at ?? undefined,
+      images: post.cover_url ? [post.cover_url] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description,
+    },
   }
 }
 
@@ -39,8 +58,26 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
   const publishedAt = formatPublishedDate(post.published_at)
   const readingMinutes = estimateReadingMinutes(post.content)
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt?.trim() ? post.excerpt : undefined,
+    datePublished: post.published_at ?? undefined,
+    dateModified: post.updated_at,
+    url: absoluteUrl(`/blog/${post.slug}`),
+    image: post.cover_url ?? undefined,
+    author: { "@type": "Person", name: "Boris Lai" },
+    publisher: { "@type": "Organization", name: SITE_NAME },
+  }
+
   return (
     <article className="mx-auto flex w-full max-w-170 flex-col gap-8">
+      {/* JSON.stringify 會把 undefined 欄位自動略掉，不會輸出 null */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <header className="flex flex-col gap-4">
         {publishedAt || readingMinutes ? (
           <p className="flex items-center gap-2 font-mono text-xs text-muted-foreground">

@@ -57,6 +57,24 @@ export async function getLatestPosts(limit = 3): Promise<PostListItem[]> {
   return data
 }
 
+/** sitemap 專用：所有已發布文章的 slug 與 updated_at。 */
+export async function getPostSitemapEntries(): Promise<
+  { slug: string; updated_at: string }[]
+> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select("slug, updated_at")
+    .eq("published", true)
+
+  if (error) {
+    throw new Error(`讀取文章 sitemap 資料失敗：${error.message}`)
+  }
+
+  return data
+}
+
 /**
  * 依 slug 撈單筆已發布的文章。查無資料回傳 null，由呼叫端決定要不要 notFound()。
  */

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 
 import { PostCard } from "@/components/blog/PostCard"
@@ -7,6 +8,42 @@ import { ProjectCard } from "@/components/work/ProjectCard"
 import { getLatestPosts } from "@/lib/queries/posts"
 import { getFeaturedProjects } from "@/lib/queries/projects"
 import { getSiteSettings } from "@/lib/queries/site-settings"
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
+
+export const metadata: Metadata = {
+  // 首頁用 root 的預設標題，不套 "%s | ..." template
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    title: `${SITE_NAME} — 一人全端接案`,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
+}
+
+const PERSON_DESCRIPTION =
+  "五年前端工程師經驗，現在以一人全端的形式接案。從形象官網、員工管理系統、自動化表單回覆到手機 App，設計到上線一手包辦。"
+
+const HOME_JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: SITE_NAME,
+      url: SITE_URL,
+      description: SITE_DESCRIPTION,
+      inLanguage: "zh-Hant-TW",
+    },
+    {
+      "@type": "Person",
+      name: "Boris Lai",
+      jobTitle: "一人全端開發者",
+      url: SITE_URL,
+      description: PERSON_DESCRIPTION,
+    },
+  ],
+}
 
 /** 桌機三欄、窄螢幕收合單欄（DESIGN.md 第 7 節）。 */
 const CARD_GRID = "grid grid-cols-1 gap-5.5 lg:grid-cols-3"
@@ -75,6 +112,11 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_JSON_LD) }}
+      />
+
       <section className="flex flex-col items-start gap-7 pt-6">
         <p className={`${EYEBROW} text-primary`}>
           全端開發 · 前端與產品接案

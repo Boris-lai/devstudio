@@ -3,9 +3,19 @@ import type { Metadata } from "next"
 import { EmptyState } from "@/components/EmptyState"
 import { ProjectCard } from "@/components/work/ProjectCard"
 import { getPublishedProjects } from "@/lib/queries/projects"
+import { absoluteUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "作品",
+  description:
+    "接案案例集：形象官網、企業管理系統、自動化表單與手機 App。每個案子都寫下我負責的部分、做法與可量測的成果。",
+  alternates: { canonical: "/work" },
+  openGraph: {
+    type: "website",
+    title: "作品 | Boris Lai 的工作室",
+    description: "接案案例集：我在每個案子負責什麼、怎麼做、成果如何。",
+    url: absoluteUrl("/work"),
+  },
 }
 
 export default async function WorkPage() {

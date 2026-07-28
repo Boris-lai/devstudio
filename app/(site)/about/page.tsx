@@ -3,10 +3,20 @@ import type { Metadata } from "next"
 import { Testimonials } from "@/components/about/Testimonials"
 import { InquiryForm } from "@/components/contact/InquiryForm"
 import { getPublishedTestimonials } from "@/lib/queries/testimonials"
+import { absoluteUrl } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "關於",
-  description: "接案開發者 Boris Lai，做能帶來詢問的網站。",
+  description:
+    "五年前端工程師經驗，現在以一人全端的形式接案。從形象官網、企業管理系統、自動化表單到手機 App，設計到上線一手包辦。",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    type: "profile",
+    title: "關於 | Boris Lai 的工作室",
+    description:
+      "五年前端工程師經驗，現在以一人全端的形式接案。設計到上線一手包辦，溝通不用轉手。",
+    url: absoluteUrl("/about"),
+  },
 }
 
 const SERVICES = [
@@ -36,17 +46,10 @@ export default async function AboutPage() {
 
         <div className="flex max-w-170 flex-col gap-4 text-[17px] leading-[1.85] text-muted-foreground">
           <p>
-            我是 Boris，接案的全端開發者，服務對象多半是台灣的小型商家與早期團隊。
-          </p>
-          <p>
-            我在意的是「這個網站有沒有真的幫到生意」。所以開始寫程式之前，
-            我通常會先花時間看你目前怎麼做事 ——
-            訂單怎麼進來、誰在處理、卡在哪一步。
-            很多時候真正該解的問題，和最初想做的功能並不一樣。
-          </p>
-          <p>
-            技術上我用 Next.js 與 Supabase 這套組合，好處是開發快、跑得快、
-            後續維護成本低，不需要養一整組人也能長期運作。
+            你好，我是 Boris Lai，五年前端工程師經驗，現在以一人全端的形式接案。
+            從形象官網、員工管理系統、自動化表單回覆，到手機 App——
+            只要你講得出需求，我就想辦法把它做出來。
+            一個人從設計到上線全包，溝通不用轉手，成品也更貼近你真正要的樣子。
           </p>
         </div>
       </section>
