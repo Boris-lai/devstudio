@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { EmptyState } from "@/components/EmptyState"
 import { ProjectCard } from "@/components/work/ProjectCard"
 import { getPublishedProjects } from "@/lib/queries/projects"
-import { absoluteUrl } from "@/lib/site"
+import { absoluteUrl, DEFAULT_OG_IMAGE } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "作品",
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     title: "作品 | Boris Lai 的工作室",
     description: "接案案例集：我在每個案子負責什麼、怎麼做、成果如何。",
     url: absoluteUrl("/work"),
+    images: [DEFAULT_OG_IMAGE],
   },
 }
 

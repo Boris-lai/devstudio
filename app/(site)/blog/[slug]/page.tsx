@@ -37,7 +37,8 @@ export async function generateMetadata({
       description,
       url,
       publishedTime: post.published_at ?? undefined,
-      images: post.cover_url ? [post.cover_url] : undefined,
+      // 不指定 images：交給同層的 opengraph-image.tsx 產生動態 OG 圖。
+      // 這裡若明確給值會蓋掉檔案慣例。
     },
     twitter: {
       card: "summary_large_image",

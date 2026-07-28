@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Testimonials } from "@/components/about/Testimonials"
 import { InquiryForm } from "@/components/contact/InquiryForm"
 import { getPublishedTestimonials } from "@/lib/queries/testimonials"
-import { absoluteUrl } from "@/lib/site"
+import { absoluteUrl, DEFAULT_OG_IMAGE } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "關於",
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
     description:
       "五年前端工程師經驗，現在以一人全端的形式接案。設計到上線一手包辦，溝通不用轉手。",
     url: absoluteUrl("/about"),
+    images: [DEFAULT_OG_IMAGE],
   },
 }
 

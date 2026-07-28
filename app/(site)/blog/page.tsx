@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { PostCard } from "@/components/blog/PostCard"
 import { EmptyState } from "@/components/EmptyState"
 import { getPublishedPosts } from "@/lib/queries/posts"
-import { absoluteUrl } from "@/lib/site"
+import { absoluteUrl, DEFAULT_OG_IMAGE } from "@/lib/site"
 
 export const metadata: Metadata = {
   title: "文章",
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
     title: "文章 | Boris Lai 的工作室",
     description: "接案途中踩過的坑與用得上的做法。",
     url: absoluteUrl("/blog"),
+    images: [DEFAULT_OG_IMAGE],
   },
 }
 

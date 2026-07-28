@@ -8,7 +8,12 @@ import { ProjectCard } from "@/components/work/ProjectCard"
 import { getLatestPosts } from "@/lib/queries/posts"
 import { getFeaturedProjects } from "@/lib/queries/projects"
 import { getSiteSettings } from "@/lib/queries/site-settings"
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
+import {
+  DEFAULT_OG_IMAGE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site"
 
 export const metadata: Metadata = {
   // 首頁用 root 的預設標題，不套 "%s | ..." template
@@ -19,6 +24,7 @@ export const metadata: Metadata = {
     title: `${SITE_NAME} — 一人全端接案`,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
+    images: [DEFAULT_OG_IMAGE],
   },
 }
 

@@ -15,6 +15,19 @@ export const SITE_NAME = "Boris Lai 的工作室"
 export const SITE_DESCRIPTION =
   "Boris Lai — 五年經驗的一人全端開發者，接案製作形象官網、企業管理系統、自動化表單與手機 App，從設計到上線一手包辦。"
 
+/**
+ * 站台預設 OG 圖（由 app/opengraph-image.tsx 產生）。
+ *
+ * 為什麼要明確引用：Next.js 的 metadata 合併是「整個 openGraph 物件被子層取代」，
+ * 只要頁面自己定義了 openGraph，從上層繼承來的 images（包含 opengraph-image
+ * 檔案慣例自動加上的那張）就會整個消失。所以凡是自訂 openGraph 的頁面，
+ * 都要自己把 images 補回來。
+ *
+ * 內頁（work/[slug]、blog/[slug]）不需要用這個常數 ——
+ * 它們有同層的 opengraph-image.tsx，會自動接上各自的動態圖。
+ */
+export const DEFAULT_OG_IMAGE = "/opengraph-image"
+
 /** 把站內相對路徑組成絕對網址。 */
 export function absoluteUrl(path: string): string {
   return new URL(path, SITE_URL).toString()
