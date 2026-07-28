@@ -21,9 +21,13 @@
 | UI | ShadCN（style=`base-nova`）＋ **`@base-ui/react`**（不是 Radix） |
 | 後端 | Supabase（`@supabase/ssr` 0.12.3、supabase-js 2.110.8） |
 | Markdown | react-markdown 10 + remark-gfm + rehype-highlight + @tailwindcss/typography |
+| 寄信 | **resend 6.18**（詢價通知） |
+| OG image | `next/og` 的 `ImageResponse`（satori） |
 | 其他 | next-themes 0.4.6、lucide-react |
 
-## 3. 已完成：Chunk 0–7
+套件管理器是 **npm**（有 `package-lock.json`）。**不要用 pnpm** —— 會生出第二個 lockfile 與不同結構的 `node_modules`。
+
+## 3. 已完成：Chunk 0–9（ARCHITECTURE 路線圖全數完成）
 
 | Chunk | 內容 |
 |---|---|
@@ -35,27 +39,43 @@
 | 5 登入 | Google OAuth、callback、header 登入狀態 |
 | 6 留言 | 文章底部留言（列表／新增／刪除，RLS 把關） |
 | 7 首頁 | `/` hero + 精選作品 + 最新文章 + CTA band + 接案 badge |
+| 8a 接案轉換 | `/about` 完整關於頁、詢價表單（寫入 `inquiries`、honeypot 擋 bot）、好評區（`testimonials`，沒資料就整區不顯示） |
+| 8b 詢價通知 | Resend 寄信到站主信箱，`replyTo` 帶客戶信箱（Gmail 直接回覆即回給客戶） |
+| 9a SEO | 各頁 metadata、`sitemap.ts`、`robots.ts`、JSON-LD（首頁 WebSite + Person、文章 BlogPosting） |
+| 9b OG image | 三張動態 1200×630 OG 圖，中文字型用 Google Fonts 動態子集 |
 | 換皮 | `DESIGN.md` 的 token／字體／卡片／內頁／首頁全數落地 |
 
-**路由**：`/`、`/about`(placeholder)、`/work`、`/work/[slug]`、`/blog`、`/blog/[slug]`、`/auth/callback`。
-除 `/_not-found` 外**全部是 dynamic (ƒ)**。
+**路由**：`/`、`/about`、`/work`、`/work/[slug]`、`/blog`、`/blog/[slug]`、`/auth/callback`，
+加上 `/sitemap.xml`、`/robots.txt` 與三條 `opengraph-image`。
+除 `/_not-found`、`/robots.txt`、`/opengraph-image` 外**全部是 dynamic (ƒ)**。
 
 ## 4. 檔案樹（原始碼）
 
 ```
 app/
-  (site)/{page,layout}.tsx  about/  work/{page,[slug]}  blog/{page,[slug]}
-  auth/callback/route.ts    layout.tsx  globals.css
+  layout.tsx  globals.css
+  opengraph-image.tsx        # 站台預設 OG 圖
+  sitemap.ts  robots.ts
+  auth/callback/route.ts
+  (site)/
+    layout.tsx  page.tsx     # 外殼（含 getUser）+ 首頁
+    about/page.tsx
+    work/page.tsx   work/[slug]/{page,opengraph-image}.tsx
+    blog/page.tsx   blog/[slug]/{page,opengraph-image}.tsx
 components/
   ui/{button,badge,card,avatar}.tsx      layout/{Header,Footer,Nav,ThemeToggle}.tsx
   work/{ProjectCard,TechPills}.tsx       blog/PostCard.tsx
   comments/{CommentsSection,CommentList,CommentForm,DeleteCommentButton}.tsx
   auth/{AuthStatus,SignInButton,SignOutButton}.tsx
+  contact/InquiryForm.tsx                about/Testimonials.tsx
   markdown/Markdown.tsx  theme-provider.tsx  EmptyState.tsx
 lib/
   supabase/{client,server,middleware,env}.ts
-  queries/{projects,posts,comments,site-settings}.ts
-  auth/{actions,safe-next,site-url}.ts   comments/actions.ts
+  queries/{projects,posts,comments,site-settings,testimonials}.ts
+  auth/{actions,safe-next,site-url}.ts
+  comments/actions.ts        inquiries/actions.ts   # 含 Resend 寄信
+  og/{font,template}.tsx     # OG 圖字型子集與共用排版
+  site.ts                    # SITE_URL / SITE_NAME / DEFAULT_OG_IMAGE
   format.ts  utils.ts
 supabase/migrations/{init,comments_fk_to_profiles}.sql  supabase/seed.sql
 types/database.types.ts   proxy.ts
@@ -102,27 +122,35 @@ types/database.types.ts   proxy.ts
 
 ## 6. 尚未完成
 
-### Chunk 8 — 接案轉換件（下一步）
-- `/about` 目前只是 placeholder，要做成接案導向的頁面。
-- **詢價表單** → 寫入 `inquiries` 表（RLS：任何人可 insert、只有 admin 可讀）+ 寄信通知（寄信方案未定）。
-- **LINE 連結**、**email**：首頁 CTA band 目前是 `href="#"` 佔位，`/about` 完成後要接真實目的地。
-- **好評區**：`testimonials` 表已建好（RLS：公開讀 `published=true`），尚無查詢與 UI。
+### 唯一的功能尾巴
+- **LINE 連結**：首頁 CTA band 的「加 LINE 聯絡」仍是 `href="#"`，等拿到連結就填。這是全站唯一剩下的佔位。
 
-### Chunk 9 — SEO / 收尾
-每頁 metadata、動態 OG image、`sitemap.xml`、`robots.ts`、細節打磨。
-
-### v1.5 之後
+### v1.5 之後（ARCHITECTURE 第 10 節）
 `/admin` 後台 CRUD、圖片上傳 Storage、瀏覽數、留言 Realtime。
 
-## 7. 目前卡住／待處理
+## 7. 部署前待辦（**沒設會靜默壞掉**）
 
-1. **Google OAuth 尚未在 Supabase Dashboard 設定**（要啟用 Google provider + 加 redirect URLs）。因此**登入與留言的端到端流程從未跑過真實案例** —— 程式碼已完成，但只驗證到未登入狀態。
-2. 資料庫已有 seed 假資料（3 作品 / 2 文章 / `accepting_work=true`），但**沒有任何封面圖**（`cover_url` 全為 null）。`next/image` 的 `remotePatterns` 只允許 Supabase Storage 網域。
-3. 「暫不接案」badge 狀態沒有實際渲染過（DB 目前是 `true`，anon 受 RLS 限制改不了）。
-4. Git：目前在 `feat/site-chunks-0-4` 分支（10 個 commit），`main` 還停在 initial commit。**Chunk 7 與 nativeButton 修正尚未提交**。
+Vercel 的環境變數要設這三組，本機 `.env.local` 已經有了：
+
+| 變數 | 不設的後果 |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | fallback 到 `http://localhost:3000` —— **canonical、sitemap、OG 圖網址全部指向 localhost**，SEO 直接壞掉 |
+| `RESEND_API_KEY` | 詢價照樣寫進資料庫，但**收不到通知信**，且只有一行 server warn |
+| `INQUIRY_NOTIFY_TO` | 同上（兩者任一沒設就整個略過寄信） |
+
+另外還有 **Supabase Dashboard** 那側：要啟用 **Google provider** 並把 `${SITE_URL}/auth/callback` 加進 Redirect URLs，登入才會通。
+
+## 8. 目前狀態／已知限制
+
+1. **Google OAuth 尚未在 Supabase Dashboard 設定**，所以**登入與留言的端到端流程從未跑過真實案例** —— 程式碼完成且靜態檢查通過，但只驗證到未登入狀態。
+2. **詢價的成功送出路徑沒有端到端跑過**：`inquiries` 表沒有 delete 政策，測試資料塞進去就刪不掉，所以只測了驗證失敗與 honeypot 這些不寫入的路徑。**Resend 寄信本身已實測成功**（`last_event: delivered`）。
+3. 資料庫有 seed 假資料（3 作品 / 2 文章 / `accepting_work=true` / 0 好評 / 0 留言），但**沒有任何封面圖**（`cover_url` 全為 null）。`next/image` 的 `remotePatterns` 只允許 Supabase Storage 網域。
+4. 「暫不接案」badge 狀態沒有實際渲染過（DB 目前是 `true`，anon 受 RLS 限制改不了）。
 5. 文章內頁每請求呼叫兩次 `getUser()`（layout 一次、留言區一次），可優化但不急。
+6. `components/ui/card.tsx` 沒有被使用（見第 5 節）。
+7. Git：全部在 **`main`**（20 個 commit），工作目錄乾淨。`feat/site-chunks-0-4` 分支停在較早的位置，已合併進 main。
 
-## 8. 規劃時請遵守
+## 9. 規劃時請遵守
 
 - TypeScript strict；**不要新增 `tailwind.config.ts`**。
 - 樣式只用既有 token 與 ShadCN 元件，不寫死 inline style。
