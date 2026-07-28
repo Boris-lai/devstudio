@@ -95,11 +95,13 @@ export default async function HomePage() {
         <div className="flex flex-wrap items-center gap-3">
           <Button
             className="h-auto rounded-lg px-5.5 py-3"
+            nativeButton={false}
             render={<Link href="/about">聊聊你的專案</Link>}
           />
           <Button
             variant="outline"
             className="h-auto rounded-lg px-5.5 py-3"
+            nativeButton={false}
             render={<Link href="/work">看作品 →</Link>}
           />
         </div>
@@ -167,11 +169,13 @@ export default async function HomePage() {
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Button
             className="h-auto rounded-lg px-5.5 py-3"
+            nativeButton={false}
             render={<Link href="/about">取得報價</Link>}
           />
           <Button
             variant="outline"
             className="h-auto rounded-lg px-5.5 py-3"
+            nativeButton={false}
             render={<a href="#">加 LINE 聯絡</a>}
           />
         </div>

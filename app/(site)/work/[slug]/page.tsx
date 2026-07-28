@@ -116,6 +116,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
               {project.live_url ? (
                 <Button
                   className="h-auto rounded-lg px-[22px] py-3"
+                  nativeButton={false}
                   render={
                     <a
                       href={project.live_url}
@@ -132,6 +133,7 @@ export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
                 <Button
                   variant="outline"
                   className="h-auto rounded-lg px-[22px] py-3"
+                  nativeButton={false}
                   render={
                     <a
                       href={project.repo_url}
