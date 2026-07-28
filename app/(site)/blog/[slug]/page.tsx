@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { CommentsSection } from "@/components/comments/CommentsSection"
 import { Markdown } from "@/components/markdown/Markdown"
 import { estimateReadingMinutes, formatPublishedDate } from "@/lib/format"
 import { getPostBySlug } from "@/lib/queries/posts"
@@ -70,6 +71,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       ) : null}
 
       <Markdown content={post.content} />
+
+      <CommentsSection postId={post.id} />
 
       <div>
         <Link

@@ -8,6 +8,42 @@ const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
   timeZone: "Asia/Taipei",
 })
 
+const relativeFormatter = new Intl.RelativeTimeFormat("zh-TW", {
+  numeric: "auto",
+})
+
+const RELATIVE_UNITS: readonly (readonly [Intl.RelativeTimeFormatUnit, number])[] =
+  [
+    ["year", 365 * 24 * 60 * 60 * 1000],
+    ["month", 30 * 24 * 60 * 60 * 1000],
+    ["day", 24 * 60 * 60 * 1000],
+    ["hour", 60 * 60 * 1000],
+    ["minute", 60 * 1000],
+  ]
+
+/**
+ * 相對時間（「3 天前」）。留言區用。
+ *
+ * 注意：這是在 server 端算的，基準是「render 當下」。文章頁是 dynamic
+ * rendering，每次請求都重新計算，所以不會出現卡住的時間。
+ */
+export function formatRelativeTime(value: string | null): string | null {
+  if (!value) return null
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return null
+
+  const diffMs = date.getTime() - Date.now()
+
+  for (const [unit, unitMs] of RELATIVE_UNITS) {
+    if (Math.abs(diffMs) >= unitMs) {
+      return relativeFormatter.format(Math.round(diffMs / unitMs), unit)
+    }
+  }
+
+  return "剛剛"
+}
+
 /**
  * 粗估閱讀時間（DESIGN.md 第 6 節）：字數 / 500，四捨五入取分鐘，至少 1 分鐘。
  * 中文以字元數計算，沒有內容就回傳 null。
