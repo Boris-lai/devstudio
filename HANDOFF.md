@@ -68,6 +68,12 @@ types/database.types.ts   proxy.ts
 - `params` 是 **Promise**；`cookies()` 是 **async**。
 - 私有資料夾（`_` 開頭）不產生路由。
 
+**metadata / OG image（很容易靜默壞掉）**
+- **metadata 合併是「子層的 `openGraph` 物件整包取代父層」**，不是逐欄合併。只要頁面自訂了 `openGraph`，從上層繼承來的 `images`（包含 `opengraph-image.tsx` 檔案慣例自動加上的那張）就會**整個消失**，而且不會有任何警告 —— 要分享出去才發現沒有預覽圖。凡是自訂 `openGraph` 的頁面，都必須明確寫上 `images: [DEFAULT_OG_IMAGE]`（定義在 `lib/site.ts`）。內頁 `work/[slug]`、`blog/[slug]` 例外：它們有同層的 `opengraph-image.tsx`，會自動接上各自的動態圖。
+- 同理，內頁的 `generateMetadata` **不要**再指定 `openGraph.images`，否則會蓋掉同層動態產生的 OG 圖。
+- `ImageResponse`（satori）**畫不出中文**，必須自己載入字型。作法見 `lib/og/font.ts`：用 Google Fonts 的 `text=` 參數切子集。**關鍵是不要送現代瀏覽器的 User-Agent** —— 送 Chrome UA 會拿到 **woff2，而 satori 不支援**；送舊版 UA 才會拿到 truetype。改動這塊之後一定要真的把圖抓下來用眼睛看過，確認中文不是空白方塊。
+- satori 只吃 flexbox，**不支援 CSS 變數與 `oklch()`**，OG 圖的顏色要寫死 hex。
+
 **Tailwind v4 / 樣式**
 - plugin 用 `@plugin "..."` 寫在 `globals.css`，**不建 config 檔**。
 - 深色模式靠 `@custom-variant dark (&:is(.dark *))` + `.dark` class。
