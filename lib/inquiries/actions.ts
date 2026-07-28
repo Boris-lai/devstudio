@@ -1,5 +1,7 @@
 "use server"
 
+import { Resend } from "resend"
+
 import { createClient } from "@/lib/supabase/server"
 
 export type InquiryFieldErrors = Partial<
@@ -24,14 +26,24 @@ function readField(formData: FormData, key: string): string {
 }
 
 /**
- * 寄信通知的接口（Chunk 8b 接真正的實作）。
+ * 尚未驗證自有網域，所以只能用 Resend 的共用寄件位址。
+ * 這個位址有限制：只寄得到 Resend 帳號本身的 email，
+ * 剛好就是 INQUIRY_NOTIFY_TO。之後驗證網域後改成自己的位址即可。
+ */
+const NOTIFY_FROM = "onboarding@resend.dev"
+
+const submittedAtFormatter = new Intl.DateTimeFormat("zh-TW", {
+  dateStyle: "long",
+  timeStyle: "short",
+  timeZone: "Asia/Taipei",
+})
+
+/**
+ * 詢價進來後寄一封通知信到站主信箱。
  *
- * 目前刻意是 no-op：介面先定好，8b 只要換掉函式內容，
- * 呼叫端與錯誤處理都不用動。
- *
- * TODO(Chunk 8b): 接上寄信服務（Resend / Supabase Edge Function 等），
- * 寄一封通知信到站主信箱。注意不要把寄信失敗變成使用者的錯誤 ——
- * 詢價已經寫進資料庫了，通知失敗只該記 log。
+ * 這個函式**永遠不會 throw**：詢價已經寫進資料庫了，
+ * 寄信失敗只是收不到即時通知，不該讓使用者看到送出失敗。
+ * 所有失敗都在這裡自行吞掉並記 log。
  */
 async function notifyNewInquiry(inquiry: {
   name: string
@@ -39,8 +51,48 @@ async function notifyNewInquiry(inquiry: {
   message: string
   source: string | null
 }): Promise<void> {
-  // 8b 之前刻意什麼都不做。標記為已使用，避免 lint 警告。
-  void inquiry
+  const apiKey = process.env.RESEND_API_KEY
+  const to = process.env.INQUIRY_NOTIFY_TO
+
+  // 沒設定的環境（例如還沒配好的預覽環境）也要能正常運作，不要壞掉
+  if (!apiKey || !to) {
+    console.warn(
+      "[inquiry] 未設定 RESEND_API_KEY 或 INQUIRY_NOTIFY_TO，略過寄信通知。",
+    )
+    return
+  }
+
+  const body = [
+    `姓名：${inquiry.name}`,
+    `Email：${inquiry.email}`,
+    `來源頁面：${inquiry.source ?? "（未提供）"}`,
+    `送出時間：${submittedAtFormatter.format(new Date())}`,
+    "",
+    "需求訊息：",
+    inquiry.message,
+  ].join("\n")
+
+  try {
+    const resend = new Resend(apiKey)
+
+    // Resend SDK 的 send() 是回傳 { data, error }，API 層級的失敗不會 throw，
+    // 所以一定要自己檢查 error，光靠 try/catch 會漏掉。
+    const { error } = await resend.emails.send({
+      from: NOTIFY_FROM,
+      to,
+      // 在 Gmail 直接按回覆就是回給客戶，不用再複製貼上信箱
+      replyTo: inquiry.email,
+      subject: `新的接案詢價：${inquiry.name}`,
+      text: body,
+    })
+
+    if (error) {
+      console.error("[inquiry] 寄信通知失敗：", error.name, error.message)
+    }
+  } catch (cause) {
+    // 網路層級的例外（DNS、逾時等）才會走到這裡
+    console.error("[inquiry] 寄信通知發生例外：", cause)
+  }
 }
 
 export async function submitInquiry(
@@ -95,11 +147,13 @@ export async function submitInquiry(
     return { status: "error", message: "送出失敗，請稍後再試一次。" }
   }
 
-  // 通知失敗不影響使用者：資料已經進資料庫了。
+  // notifyNewInquiry 自己會吞掉並記錄所有失敗，正常情況不會 throw。
+  // 這層 try/catch 純粹是防禦性的：詢價已經寫進資料庫，
+  // 就算通知那側日後改壞了，也不該讓使用者看到送出失敗。
   try {
     await notifyNewInquiry({ name, email, message, source })
   } catch {
-    // TODO(Chunk 8b): 這裡改成記錄到 log 服務
+    // 故意忽略
   }
 
   return { status: "success" }
