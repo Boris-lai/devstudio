@@ -1,0 +1,32 @@
+{
+  "editor.formatOnSave": true,
+
+  // VS Code 是「逐語言」決定 formatter 的，只設頂層的 defaultFormatter
+  // 不一定蓋得過各語言的內建預設，所以下面逐個釘住。
+  // 沒釘的話，存檔會用內建的 TS formatter，分號又會被加回來。
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Markdown 交給編輯器原樣保留：Prettier 的表格對齊按字元數填充、
+  // 不考慮中文是雙寬字元，格式化後表格反而會歪（*.md 已在 .prettierignore）。
+  "[markdown]": {
+    "editor.formatOnSave": false
+  }
+}
