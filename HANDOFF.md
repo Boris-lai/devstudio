@@ -23,6 +23,7 @@
 | Markdown | react-markdown 10 + remark-gfm + rehype-highlight + @tailwindcss/typography |
 | 寄信 | **resend 6.18**（詢價通知） |
 | OG image | `next/og` 的 `ImageResponse`（satori） |
+| 格式化 | **prettier 3.9**（`semi: false`），`npm run format` / `format:check` |
 | 其他 | next-themes 0.4.6、lucide-react |
 
 套件管理器是 **npm**（有 `package-lock.json`）。**不要用 pnpm** —— 會生出第二個 lockfile 與不同結構的 `node_modules`。
@@ -68,6 +69,7 @@ components/
   comments/{CommentsSection,CommentList,CommentForm,DeleteCommentButton}.tsx
   auth/{AuthStatus,SignInButton,SignOutButton}.tsx
   contact/InquiryForm.tsx                about/Testimonials.tsx
+  blog/ReadingProgress.tsx   # 文章頁頂的閱讀進度條（client）
   markdown/Markdown.tsx  theme-provider.tsx  EmptyState.tsx
 lib/
   supabase/{client,server,middleware,env}.ts
@@ -79,6 +81,7 @@ lib/
   format.ts  utils.ts
 supabase/migrations/{init,comments_fk_to_profiles}.sql  supabase/seed.sql
 types/database.types.ts   proxy.ts
+.prettierrc.json  .prettierignore  .vscode/settings.json
 ```
 
 ## 5. 非顯而易見的約束（**規劃時務必遵守，這些都是踩過坑換來的**）
@@ -93,6 +96,14 @@ types/database.types.ts   proxy.ts
 - 同理，內頁的 `generateMetadata` **不要**再指定 `openGraph.images`，否則會蓋掉同層動態產生的 OG 圖。
 - `ImageResponse`（satori）**畫不出中文**，必須自己載入字型。作法見 `lib/og/font.ts`：用 Google Fonts 的 `text=` 參數切子集。**關鍵是不要送現代瀏覽器的 User-Agent** —— 送 Chrome UA 會拿到 **woff2，而 satori 不支援**；送舊版 UA 才會拿到 truetype。改動這塊之後一定要真的把圖抓下來用眼睛看過，確認中文不是空白方塊。
 - satori 只吃 flexbox，**不支援 CSS 變數與 `oklch()`**，OG 圖的顏色要寫死 hex。
+
+**已知的設計偏離（規劃視覺時要知道）**
+- `DESIGN.md` 開頭定的是「中性偏暖基底 + **單一節制的板岩藍點綴**」，但技術標籤（`TechPills`）後來改成**依技術給不同色**（Tailwind 內建色階 blue/cyan/emerald/… + `dark:` 變體），刻意偏離該定調以換取辨識度。這是有意識的取捨，不是漏改。未對應到的技術仍退回 `accent-soft`/`primary`。
+- 文章頁另外用 `--accent-soft` + `--primary` 活化了 blockquote、inline code、h2 刻度；程式碼區塊有語言標籤、頁頂有閱讀進度條。這些 prose 覆寫**文章與作品內頁共用**。
+
+**格式化**
+- Prettier 設定 `semi: false`，全專案無分號。`.vscode/settings.json` 逐語言把 formatter 釘成 Prettier（VS Code 是逐語言決定 formatter 的，只設頂層蓋不過內建預設）。
+- `*.md` 在 `.prettierignore` 裡：Prettier 的 markdown 表格對齊按**字元數**填充、不考慮中文是雙寬字元，格式化後表格在編輯器裡反而會歪。**不要把文件交給 Prettier。**
 
 **Tailwind v4 / 樣式**
 - plugin 用 `@plugin "..."` 寫在 `globals.css`，**不建 config 檔**。
@@ -148,12 +159,12 @@ Vercel 的環境變數要設這三組，本機 `.env.local` 已經有了：
 4. 「暫不接案」badge 狀態沒有實際渲染過（DB 目前是 `true`，anon 受 RLS 限制改不了）。
 5. 文章內頁每請求呼叫兩次 `getUser()`（layout 一次、留言區一次），可優化但不急。
 6. `components/ui/card.tsx` 沒有被使用（見第 5 節）。
-7. Git：全部在 **`main`**（20 個 commit），工作目錄乾淨。`feat/site-chunks-0-4` 分支停在較早的位置，已合併進 main。
+7. Git：全部在 **`main`**（27 個 commit），已推送到 GitHub（`Boris-lai/devstudio`，**public**），工作目錄乾淨。`feat/site-chunks-0-4` 分支停在較早的位置，已合併進 main。
 
 ## 9. 規劃時請遵守
 
 - TypeScript strict；**不要新增 `tailwind.config.ts`**。
 - 樣式只用既有 token 與 ShadCN 元件，不寫死 inline style。
 - **不要改動 RLS 或資料表**，除非該步驟本身就是 schema 變更（要的話請明確寫出 migration）。
-- 一次一個 chunk，每步結尾要能跑 `typecheck / lint / build`。
+- 一次一個 chunk，每步結尾要能跑 `typecheck / lint / build`（另有 `npm run format:check`）。
 - 純中文，不做 i18n。

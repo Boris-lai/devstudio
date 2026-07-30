@@ -49,14 +49,36 @@
 
 ---
 
-## 4. 卡片（作品卡 / 文章卡，共用視覺語言）
+## 4. 卡片
 
-- 容器：`bg-card`、`1px border`、圓角 14、`overflow-hidden`，整張是連結；hover：`translateY(-3px)` + 邊框轉 `--primary`，`transition .18s`。
-- 封面：作品卡 172px 高 / 文章卡 160px 高，用 `next/image`，下緣一條 border。
-- 無封面 fallback：**作品卡** = `surface-2` 底 + 置中的標題首字母（`--primary` 色、opacity ~.55）；**文章卡** = `surface-2` 淡底即可（乾淨留白）。
-- 內容區 padding ~18–20、gap 10–12：標題 17/600 → summary/excerpt（**可為空**，`muted-foreground` 14/1.75、`line-clamp-2`）→ 作品的 tech pills（**可為空**）貼底 / 文章的日期（mono 12 muted）貼底。
-- tech pill：outline 膠囊，`border`、圓角 999、`text-xs`、padding ~6/11、`muted-foreground`；可用 ShadCN `Badge variant="outline"` 調成這個樣子。
-- 網格：`grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))`、gap 22；桌機多欄、手機自動單欄。
+兩種卡**共用互動語言、但視覺結構刻意不同**：
+
+| | 作品卡（櫥窗感） | 文章卡（編輯感） |
+|---|---|---|
+| 主角 | **圖先於字** | **字先於圖** |
+| 封面 | 172px 頂圖，下緣一條 border | 降級為次要：132px 矮圖，**放在文字之後** |
+| 無封面 | `surface-2` 底 + 置中標題首字母（`--primary`、opacity ~.55） | **整塊不渲染**，不放佔位方塊 |
+| 順序 | 封面 → 標題 → summary → 成果 chip → tech pills → 行動點 | 日期 eyebrow → 標題 → 摘要 →（封面，若有）→ 行動點 |
+| 標題 | 17 / 600 | **20 / 600**，行高 1.45 |
+| 摘要 | `line-clamp-2` | **`line-clamp-3`**（強化文字為主） |
+| 日期 | — | **`--primary` mono 小標，置於標題之上當 eyebrow** |
+| 行動點 | 「看完整案例 →」靠右 | 「閱讀全文 →」靠左（順閱讀方向） |
+| padding | 20 | 24（更寬鬆的閱讀留白） |
+
+- 共用容器：`bg-card`、`1px border`、圓角 14，整張是連結；hover：`translateY(-3px)` + 邊框轉 `--primary`，`transition .18s`。
+- 行動點一律用 `<span>` 而非連結 —— 整張卡已經是 `<a>`，巢狀 `<a>` 是無效 HTML。
+- 空欄位（summary/excerpt、outcome、tech、封面、日期）各自收合，不留空框。
+- 網格：`grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))`、gap 22；首頁固定三欄（見第 7 節）。
+
+### tech pill：刻意的「分類多色」例外
+
+`--primary` 是全站唯一的點綴色，**技術標籤是唯一的例外**：它依技術給不同色相（Tailwind 內建色階 blue / cyan / emerald / indigo / violet / amber / rose / neutral，各自帶 `dark:` 變體），用來換取一排標籤的辨識度。
+
+- 這是**有意識的取捨**，不是漏改。看到它與「單一節制的板岩藍」不一致時，不要「修正」回去。
+- 統一調到低飽和：淺底 `-100/-200` + 深字 `-700/-800`；深色模式翻成 `-950/-800` 底 + `-300` 字。
+- 刻意**不用各家原廠品牌色**：Next.js 與 Vercel 都是黑色會撞，原廠飽和色放在暖中性底上也容易顯得花。
+- 沒對應到的技術**退回 `--accent-soft` 底 + `--primary` 文字**，維持房子調性。
+- 尺寸：膠囊、圓角 999、`text-[11px]`、padding 8/2；作品卡與作品內頁共用同一個元件。
 
 ## 空狀態（EmptyState）
 
