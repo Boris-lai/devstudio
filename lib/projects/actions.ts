@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
 import { requireAdmin } from "@/lib/auth/is-admin"
+import { parseTechStack } from "@/lib/projects/tech-stack"
 import { slugify } from "@/lib/slug"
 import { createClient } from "@/lib/supabase/server"
 
@@ -44,18 +45,6 @@ function readText(formData: FormData, key: string): string {
 function readNullableText(formData: FormData, key: string): string | null {
   const value = readText(formData, key)
   return value.length > 0 ? value : null
-}
-
-/**
- * tech_stack 在表單上是逗號分隔的字串，存進資料庫要是 text[]。
- * 全形逗號也一起吃，中文輸入法很容易打成全形。
- * 欄位是 not null default '{}'，所以沒填就是空陣列而不是 null。
- */
-function readTechStack(formData: FormData): string[] {
-  return readText(formData, "tech_stack")
-    .split(/[,，]/)
-    .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0)
 }
 
 function readProjectInput(
@@ -110,7 +99,7 @@ function readProjectInput(
       outcome: readNullableText(formData, "outcome"),
       client_type: readNullableText(formData, "client_type"),
       cover_url: readNullableText(formData, "cover_url"),
-      tech_stack: readTechStack(formData),
+      tech_stack: parseTechStack(readText(formData, "tech_stack")),
       live_url: readNullableText(formData, "live_url"),
       repo_url: readNullableText(formData, "repo_url"),
       featured: formData.get("featured") !== null,

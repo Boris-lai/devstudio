@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 
 import { ProjectForm } from "@/components/admin/ProjectForm"
 import { updateProject } from "@/lib/projects/actions"
+import { formatTechStack } from "@/lib/projects/tech-stack"
 import { getAdminProjectById } from "@/lib/queries/admin-projects"
 
 export const metadata: Metadata = {
@@ -45,8 +46,8 @@ export default async function EditProjectPage({
           role: project.role ?? "",
           outcome: project.outcome ?? "",
           clientType: project.client_type ?? "",
-          // 陣列讀回來 join 成逗號字串預填
-          techStack: project.tech_stack.join(", "),
+          // 陣列讀回來轉成逗號字串預填
+          techStack: formatTechStack(project.tech_stack),
           coverUrl: project.cover_url ?? "",
           liveUrl: project.live_url ?? "",
           repoUrl: project.repo_url ?? "",
