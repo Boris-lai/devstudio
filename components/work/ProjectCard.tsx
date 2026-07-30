@@ -1,3 +1,4 @@
+import { TrendingUp } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -43,7 +44,27 @@ export function ProjectCard({ project }: { project: ProjectListItem }) {
           </p>
         ) : null}
 
-        <TechPills items={project.tech_stack} className="mt-auto pt-1" />
+        {/*
+          成果 chip：案例的賣點，拉到卡片上當誘因。
+          outcome 通常帶數字且可能很長，這裡單行截斷避免撐版；
+          完整內容在內頁的 OUTCOME 突出框裡。
+        */}
+        {project.outcome ? (
+          <div className="flex w-fit max-w-full items-center gap-1.5 rounded-full bg-accent-soft px-2.5 py-1 font-mono text-xs text-primary">
+            <TrendingUp aria-hidden className="size-3 shrink-0" />
+            <span className="min-w-0 truncate">{project.outcome}</span>
+          </div>
+        ) : null}
+
+        <TechPills items={project.tech_stack} />
+
+        {/*
+          行動提示。整張卡本來就是 <a>，這裡刻意用 span 而非連結，
+          避免巢狀 <a>；hover 效果由外層卡片負責。
+        */}
+        <span className="mt-auto pt-1 font-mono text-xs text-primary">
+          看完整案例 →
+        </span>
       </div>
     </Link>
   )

@@ -5,13 +5,23 @@ import type { Tables } from "@/types/database.types"
 
 export type Project = Tables<"projects">
 
-/** 卡片列表只需要這些欄位，不要把 content 整包 markdown 拉下來。 */
+/**
+ * 卡片列表只需要這些欄位，不要把 content 整包 markdown 拉下來。
+ * outcome 是為了在卡片上顯示成果 chip 而加的（短字串，成本可忽略）。
+ */
 const LIST_COLUMNS =
-  "id, slug, title, summary, cover_url, tech_stack, sort_order" as const
+  "id, slug, title, summary, outcome, cover_url, tech_stack, sort_order" as const
 
 export type ProjectListItem = Pick<
   Project,
-  "id" | "slug" | "title" | "summary" | "cover_url" | "tech_stack" | "sort_order"
+  | "id"
+  | "slug"
+  | "title"
+  | "summary"
+  | "outcome"
+  | "cover_url"
+  | "tech_stack"
+  | "sort_order"
 >
 
 /**
