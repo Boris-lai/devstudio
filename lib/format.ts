@@ -8,6 +8,32 @@ const dateFormatter = new Intl.DateTimeFormat("zh-TW", {
   timeZone: "Asia/Taipei",
 })
 
+/**
+ * 把 ISO 時間轉成 <input type="datetime-local"> 吃的「YYYY-MM-DDTHH:mm」，
+ * 以 Asia/Taipei 呈現。表單送出後由 server action 補回 +08:00。
+ */
+export function toTaipeiDateTimeLocal(value: string | null): string {
+  if (!value) return ""
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ""
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(date)
+
+  const get = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? ""
+
+  return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`
+}
+
 const relativeFormatter = new Intl.RelativeTimeFormat("zh-TW", {
   numeric: "auto",
 })
