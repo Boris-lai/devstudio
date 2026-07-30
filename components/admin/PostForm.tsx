@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useActionState, useState } from "react"
 
+import { CoverUpload } from "@/components/admin/CoverUpload"
 import { Markdown } from "@/components/markdown/Markdown"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -126,19 +127,12 @@ export function PostForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="cover_url">封面圖網址</Label>
-        <Input
-          id="cover_url"
+        <Label>封面圖</Label>
+        <CoverUpload
           name="cover_url"
-          type="url"
-          defaultValue={initial.coverUrl}
+          initialUrl={initial.coverUrl}
           disabled={isPending}
-          className="font-mono"
         />
-        <p className="text-xs text-muted-foreground">
-          目前 next/image 只允許 Supabase Storage 的網域，別的來源要先加進
-          next.config.ts。
-        </p>
       </div>
 
       <div className="flex flex-wrap items-end gap-8">

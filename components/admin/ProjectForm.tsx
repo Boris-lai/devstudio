@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useActionState, useState } from "react"
 
+import { CoverUpload } from "@/components/admin/CoverUpload"
 import { Markdown } from "@/components/markdown/Markdown"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -189,19 +190,16 @@ export function ProjectForm({
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="cover_url">封面圖網址</Label>
-          <Input
-            id="cover_url"
-            name="cover_url"
-            type="url"
-            defaultValue={initial.coverUrl}
-            disabled={isPending}
-            className="font-mono"
-          />
-        </div>
+      <div className="flex flex-col gap-2">
+        <Label>封面圖</Label>
+        <CoverUpload
+          name="cover_url"
+          initialUrl={initial.coverUrl}
+          disabled={isPending}
+        />
+      </div>
 
+      <div className="grid gap-6 md:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="live_url">網站網址</Label>
           <Input
