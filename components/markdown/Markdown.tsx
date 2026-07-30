@@ -1,4 +1,5 @@
-import ReactMarkdown from "react-markdown"
+import type { Element } from "hast"
+import ReactMarkdown, { type Components } from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
 import remarkGfm from "remark-gfm"
 
@@ -11,6 +12,45 @@ import { cn } from "@/lib/utils"
 type MarkdownProps = {
   content: string | null | undefined
   className?: string
+}
+
+const LANGUAGE_PREFIX = "language-"
+
+/**
+ * 從 hast 節點取出程式碼區塊的語言名。
+ * rehype-highlight 會在 <pre> 內的 <code> 上加 `language-xxx`。
+ */
+function readCodeLanguage(node: Element | undefined): string | undefined {
+  const child = node?.children?.[0]
+  if (child?.type !== "element") return undefined
+
+  const classNames = child.properties?.className
+  if (!Array.isArray(classNames)) return undefined
+
+  for (const entry of classNames) {
+    if (typeof entry === "string" && entry.startsWith(LANGUAGE_PREFIX)) {
+      return entry.slice(LANGUAGE_PREFIX.length)
+    }
+  }
+
+  return undefined
+}
+
+/**
+ * ⚠️ 這個 renderer 是文章內頁與作品內頁共用的，改動會同時影響兩邊。
+ *
+ * 目前只做一件事：把語言名寫成 <pre data-language="ts">，
+ * 左上角的標籤本身由 globals.css 的 `.prose pre[data-language]::before` 畫出來。
+ * 沒有語言時屬性是 undefined，React 會整個省略，CSS 選擇器就不會命中。
+ */
+const COMPONENTS: Components = {
+  pre({ node, children, ...props }) {
+    return (
+      <pre {...props} data-language={readCodeLanguage(node)}>
+        {children}
+      </pre>
+    )
+  },
 }
 
 /**
@@ -35,6 +75,7 @@ export function Markdown({ content, className }: MarkdownProps) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
+        components={COMPONENTS}
       >
         {content}
       </ReactMarkdown>

@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { ReadingProgress } from "@/components/blog/ReadingProgress"
 import { CommentsSection } from "@/components/comments/CommentsSection"
 import { Markdown } from "@/components/markdown/Markdown"
 import { estimateReadingMinutes, formatPublishedDate } from "@/lib/format"
@@ -74,6 +75,8 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
   return (
     <article className="mx-auto flex w-full max-w-170 flex-col gap-8">
+      <ReadingProgress />
+
       {/* JSON.stringify 會把 undefined 欄位自動略掉，不會輸出 null */}
       <script
         type="application/ld+json"
@@ -81,7 +84,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
       />
       <header className="flex flex-col gap-4">
         {publishedAt || readingMinutes ? (
-          <p className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
+          <p className="flex items-center gap-2 font-mono text-xs tracking-[0.08em] text-primary">
             {publishedAt ? (
               <time dateTime={post.published_at ?? undefined}>
                 {publishedAt}
@@ -93,6 +96,9 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
         ) : null}
 
         <h1 className="text-4xl leading-[1.4] font-bold">{post.title}</h1>
+
+        {/* 標題下方的短分隔線，取代原本直接接內容的空白 */}
+        <div aria-hidden className="h-0.75 w-11 bg-primary" />
       </header>
 
       {post.cover_url ? (

@@ -198,19 +198,34 @@
   line-height: 1.5;
 }
 
+/* h2 前的小刻度：一條與文字等高的板岩藍直條。h3 刻意不加，保持克制。 */
+.prose h2::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 1em;
+  margin-right: 0.55rem;
+  vertical-align: -0.1em;
+  background: var(--primary);
+}
+
 .prose h3 {
   font-size: 19px;
   font-weight: 600;
   line-height: 1.5;
 }
 
-/* inline code：小 chip。typography 預設會用 ::before/::after 補上反引號，拿掉。 */
+/*
+ * inline code：accent-soft 底 + 板岩藍文字的小 chip。
+ * 只套行內的 code —— pre 裡的程式碼區塊維持 highlight.js 的 github-dark。
+ * typography 預設會用 ::before/::after 補上反引號，拿掉。
+ */
 .prose :not(pre) > code {
   font-family: var(--font-mono);
   font-size: 0.875em;
   font-weight: 500;
-  background: var(--muted);
-  color: var(--foreground);
+  background: var(--accent-soft);
+  color: var(--primary);
   border-radius: 6px;
   padding: 2px 7px;
 }
@@ -222,9 +237,32 @@
 
 /* 程式碼區塊：容器負責圓角與捲動，配色交給 highlight.js 的 github-dark */
 .prose pre {
+  position: relative;
   border-radius: 12px;
   padding: 1rem 1.15rem;
   overflow-x: auto;
+}
+
+/*
+ * 左上角的語言標籤（選配）。語言名由 Markdown.tsx 的自訂 pre renderer
+ * 寫成 data-language，這裡用 ::before 顯示，沒有語言就不會出現。
+ *
+ * 顏色刻意用 color-mix 把 --primary 調亮：程式碼區塊在亮暗模式下都是
+ * github-dark 的深底，直接用亮色模式的 --primary（較深的藍）會看不清楚。
+ */
+.prose pre[data-language] {
+  padding-top: 2.5rem;
+}
+
+.prose pre[data-language]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.8rem;
+  left: 1.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: color-mix(in oklch, var(--primary) 55%, white);
 }
 
 .prose pre code,
@@ -236,13 +274,20 @@
   line-height: 1.75;
 }
 
-/* blockquote：左邊一條細線，不要斜體與彎引號 */
+/*
+ * blockquote：accent-soft 淡底 + 板岩藍 3px 左邊框。
+ * 單邊框刻意不加圓角（typography 沒設，這裡明確歸零以免日後被繼承到）。
+ */
 .prose blockquote {
   border-left-width: 3px;
-  border-left-color: var(--border);
-  color: var(--muted-foreground);
+  border-left-color: var(--primary);
+  border-radius: 0;
+  background: var(--accent-soft);
+  color: var(--foreground);
   font-style: normal;
   font-weight: 400;
+  /* 加了底色就需要四邊都有內距，typography 預設只給左邊 */
+  padding: 0.9rem 1.25rem;
 }
 
 .prose blockquote p:first-of-type::before,
