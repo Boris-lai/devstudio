@@ -30,7 +30,9 @@ export async function getCommentsByPostId(
 
   const { data, error } = await supabase
     .from("comments")
-    .select("id, content, created_at, user_id, profiles(id, display_name, avatar_url)")
+    .select(
+      "id, content, created_at, user_id, profiles(id, display_name, avatar_url)",
+    )
     .eq("post_id", postId)
     .is("parent_id", null)
     .order("created_at", { ascending: true })

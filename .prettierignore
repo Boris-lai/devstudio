@@ -1,0 +1,16 @@
+node_modules
+.next
+package-lock.json
+
+# supabase gen types 的產出，格式化了下次重新產生又會變回去
+types/database.types.ts
+
+# supabase CLI 的暫存狀態
+supabase/.temp
+
+# 由外部工具維護、含 BEGIN/END 標記
+AGENTS.md
+
+# 文件不交給 Prettier：它的 markdown 表格對齊按字元數計算、
+# 不考慮中文是雙寬字元，格式化後在編輯器裡反而會歪掉。
+*.md

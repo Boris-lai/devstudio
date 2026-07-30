@@ -1,12 +1,7 @@
 import { ImageResponse } from "next/og"
 
 import { loadNotoSansTCSubset } from "@/lib/og/font"
-import {
-  OG_CONTENT_TYPE,
-  OG_SIZE,
-  OgCard,
-  ogCardText,
-} from "@/lib/og/template"
+import { OG_CONTENT_TYPE, OG_SIZE, OgCard, ogCardText } from "@/lib/og/template"
 import { getProjectBySlug } from "@/lib/queries/projects"
 import { SITE_NAME } from "@/lib/site"
 

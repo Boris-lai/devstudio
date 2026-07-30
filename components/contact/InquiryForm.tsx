@@ -41,8 +41,7 @@ export function InquiryForm() {
     )
   }
 
-  const fieldErrors =
-    state?.status === "error" ? state.fieldErrors : undefined
+  const fieldErrors = state?.status === "error" ? state.fieldErrors : undefined
 
   return (
     <form action={formAction} className="relative flex flex-col gap-5">

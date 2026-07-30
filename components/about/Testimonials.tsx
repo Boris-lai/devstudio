@@ -10,7 +10,11 @@ function formatAttribution(testimonial: Testimonial): string | null {
   return parts.length > 0 ? parts.join(" · ") : null
 }
 
-export function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+export function Testimonials({
+  testimonials,
+}: {
+  testimonials: Testimonial[]
+}) {
   // 沒有好評就整區不顯示，不留空框（與作品內頁的空欄位收合同一套原則）
   if (testimonials.length === 0) return null
 

@@ -12,14 +12,16 @@ const relativeFormatter = new Intl.RelativeTimeFormat("zh-TW", {
   numeric: "auto",
 })
 
-const RELATIVE_UNITS: readonly (readonly [Intl.RelativeTimeFormatUnit, number])[] =
-  [
-    ["year", 365 * 24 * 60 * 60 * 1000],
-    ["month", 30 * 24 * 60 * 60 * 1000],
-    ["day", 24 * 60 * 60 * 1000],
-    ["hour", 60 * 60 * 1000],
-    ["minute", 60 * 1000],
-  ]
+const RELATIVE_UNITS: readonly (readonly [
+  Intl.RelativeTimeFormatUnit,
+  number,
+])[] = [
+  ["year", 365 * 24 * 60 * 60 * 1000],
+  ["month", 30 * 24 * 60 * 60 * 1000],
+  ["day", 24 * 60 * 60 * 1000],
+  ["hour", 60 * 60 * 1000],
+  ["minute", 60 * 1000],
+]
 
 /**
  * 相對時間（「3 天前」）。留言區用。

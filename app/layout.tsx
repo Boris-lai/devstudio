@@ -1,20 +1,20 @@
-import type { Metadata } from "next";
-import { Noto_Sans_Mono, Noto_Sans_TC } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import type { Metadata } from "next"
+import { Noto_Sans_Mono, Noto_Sans_TC } from "next/font/google"
+import "./globals.css"
+import { ThemeProvider } from "@/components/theme-provider"
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 
 const notoSansTC = Noto_Sans_TC({
   variable: "--font-sans",
   subsets: ["latin"],
-});
+})
 
 // 日期、mono 小標、inline code、程式碼區塊都用這套（DESIGN.md 第 2 節）。
 // 這是可變字體，wght 涵蓋設計要求的 400/500。
 const notoSansMono = Noto_Sans_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-});
+})
 
 export const metadata: Metadata = {
   // 有了 metadataBase，各頁的相對 canonical 與 OG 圖才組得出絕對網址
@@ -52,12 +52,12 @@ export const metadata: Metadata = {
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
   },
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     // next-themes 會在 hydration 前就把 class 寫到 <html>，
@@ -71,5 +71,5 @@ export default function RootLayout({
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
-  );
+  )
 }

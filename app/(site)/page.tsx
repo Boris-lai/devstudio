@@ -124,9 +124,7 @@ export default async function HomePage() {
       />
 
       <section className="flex flex-col items-start gap-7 pt-6">
-        <p className={`${EYEBROW} text-primary`}>
-          全端開發 · 前端與產品接案
-        </p>
+        <p className={`${EYEBROW} text-primary`}>全端開發 · 前端與產品接案</p>
 
         <div className="flex flex-col gap-6">
           <h1 className="max-w-205 text-[clamp(2.125rem,6.5vw,58px)] leading-[1.28] font-bold tracking-tight text-pretty">
@@ -135,8 +133,8 @@ export default async function HomePage() {
 
           <p className="max-w-155 text-[17px] leading-[1.85] text-muted-foreground">
             我是接案開發者，服務對象多半是小型商家與早期團隊。
-            從需求訪談、系統設計到上線後維運都一手包辦，交付的是可以量測的成果 ——
-            少一點抄單時間、多一則詢價，而不只是一份漂亮的畫面。
+            從需求訪談、系統設計到上線後維運都一手包辦，交付的是可以量測的成果
+            —— 少一點抄單時間、多一則詢價，而不只是一份漂亮的畫面。
           </p>
         </div>
 
