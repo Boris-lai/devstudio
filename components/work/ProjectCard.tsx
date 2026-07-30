@@ -62,7 +62,7 @@ export function ProjectCard({ project }: { project: ProjectListItem }) {
           行動提示。整張卡本來就是 <a>，這裡刻意用 span 而非連結，
           避免巢狀 <a>；hover 效果由外層卡片負責。
         */}
-        <span className="mt-auto pt-1 font-mono text-xs text-primary">
+        <span className="mt-auto self-end pt-1 font-mono text-xs text-primary">
           看完整案例 →
         </span>
       </div>
