@@ -48,15 +48,3 @@ export async function getCommentsByPostId(
     author: profiles ?? null,
   }))
 }
-
-/**
- * 目前使用者是否為 admin。
- * 直接呼叫資料庫的 is_admin()，與 RLS 政策用的是同一份定義，避免兩邊判斷漂移。
- */
-export async function isCurrentUserAdmin(): Promise<boolean> {
-  const supabase = await createClient()
-  const { data, error } = await supabase.rpc("is_admin")
-
-  if (error) return false
-  return data === true
-}

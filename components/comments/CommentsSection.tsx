@@ -1,7 +1,8 @@
 import { SignInButton } from "@/components/auth/SignInButton"
 import { CommentForm } from "@/components/comments/CommentForm"
 import { CommentList } from "@/components/comments/CommentList"
-import { getCommentsByPostId, isCurrentUserAdmin } from "@/lib/queries/comments"
+import { isCurrentUserAdmin } from "@/lib/auth/is-admin"
+import { getCommentsByPostId } from "@/lib/queries/comments"
 import { createClient } from "@/lib/supabase/server"
 
 /**
