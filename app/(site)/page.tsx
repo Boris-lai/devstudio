@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
 
 import { PostCard } from "@/components/blog/PostCard"
@@ -123,38 +124,60 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_JSON_LD) }}
       />
 
-      <section className="flex flex-col items-start gap-7 pt-6">
-        <p className={`${EYEBROW} text-primary`}>全端開發 · 前端與產品接案</p>
+      {/*
+        兩欄 hero：文字在左、示意圖在右。窄螢幕收合成單欄，
+        DOM 順序讓圖片自然落在文字之後。
+      */}
+      <section className="grid items-center gap-10 pt-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14">
+        <div className="flex flex-col items-start gap-7">
+          <p className={`${EYEBROW} text-primary`}>全端開發 · 前端與產品接案</p>
 
-        <div className="flex flex-col gap-6">
-          <h1 className="max-w-205 text-[clamp(2.125rem,6.5vw,58px)] leading-[1.28] font-bold tracking-tight text-pretty">
-            把你的生意流程，做成一個好維護、跑得快的網站
-          </h1>
+          <div className="flex flex-col gap-6">
+            <h1 className="text-[clamp(2.125rem,5vw,52px)] leading-[1.28] font-bold tracking-tight text-pretty">
+              把你的生意流程，做成一個好維護、跑得快的網站
+            </h1>
 
-          <p className="max-w-155 text-[17px] leading-[1.85] text-muted-foreground">
-            我是接案開發者，服務對象多半是小型商家與早期團隊。
-            從需求訪談、系統設計到上線後維運都一手包辦，交付的是可以量測的成果
-            —— 少一點抄單時間、多一則詢價，而不只是一份漂亮的畫面。
-          </p>
+            <p className="text-[17px] leading-[1.85] text-muted-foreground">
+              我是接案開發者，服務對象多半是小型商家與早期團隊。
+              從需求訪談、系統設計到上線後維運都一手包辦，交付的是可以量測的成果
+              —— 少一點抄單時間、多一則詢價，而不只是一份漂亮的畫面。
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              className="h-auto rounded-lg px-5.5 py-3"
+              nativeButton={false}
+              render={<Link href="/about#contact">聊聊你的專案</Link>}
+            />
+            <Button
+              variant="outline"
+              className="h-auto rounded-lg px-5.5 py-3"
+              nativeButton={false}
+              render={<Link href="/work">看作品 →</Link>}
+            />
+          </div>
+
+          {siteSettings ? (
+            <AvailabilityBadge acceptingWork={siteSettings.accepting_work} />
+          ) : null}
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            className="h-auto rounded-lg px-5.5 py-3"
-            nativeButton={false}
-            render={<Link href="/about#contact">聊聊你的專案</Link>}
-          />
-          <Button
-            variant="outline"
-            className="h-auto rounded-lg px-5.5 py-3"
-            nativeButton={false}
-            render={<Link href="/work">看作品 →</Link>}
+        {/*
+          圖片本身是淺色底，在深色模式下會變成一塊亮面 ——
+          用邊框與圓角框住，讓它讀起來像刻意擺放的產品照而不是破圖。
+          priority：這張在第一屏，不要等到捲動才載入。
+        */}
+        <div className="relative aspect-4/3 w-full overflow-hidden rounded-xl border border-border bg-muted shadow-xl shadow-black/10">
+          <Image
+            src="/hero-workflow.webp"
+            alt="筆電上展開的多個介面設計稿與程式碼片段"
+            fill
+            sizes="(min-width: 1024px) 520px, 100vw"
+            className="object-cover"
+            priority
           />
         </div>
-
-        {siteSettings ? (
-          <AvailabilityBadge acceptingWork={siteSettings.accepting_work} />
-        ) : null}
       </section>
 
       <section className="flex flex-col gap-8">

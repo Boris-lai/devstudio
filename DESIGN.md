@@ -121,11 +121,14 @@
 
 ### Hero
 
+**兩欄**：文字在左、示意圖在右（`lg:grid-cols-[0.95fr_1.05fr]`，圖片略寬），窄螢幕收合成單欄，圖片自然落在文字之後。
+
 - mono eyebrow（`--primary` 色）：「全端開發 · 前端與產品接案」。
-- h1：桌機約 **58**、行高 **1.28**、字重 **700**、`text-wrap: pretty`；窄螢幕用 `clamp()` 縮放，不要硬切斷點。
-- 自介段：`muted-foreground`、17 / 1.85、`max-width ~620`。
+- h1：行高 **1.28**、字重 **700**、`text-wrap: pretty`；用 `clamp()` 縮放，不要硬切斷點。上限 **52** 而非單欄時的 58 —— 兩欄後文字欄變窄，58 會讓標題多換一行。
+- 自介段：`muted-foreground`、17 / 1.85。欄寬本身已經限制了行長，不再另外設 `max-width`。
 - 雙 CTA：主要 = 實心 `--primary`；次要 = outline「看作品 →」（→ `/work`）。
 - 接案 badge 收在 CTA 下方。
+- 示意圖：`aspect-4/3`、圓角 14 + `1px border` + `shadow-xl shadow-black/10`（兩層柔和陰影，讓它浮起來）。**圖片本身是淺色底**，深色模式下會是一塊亮面，靠邊框與圓角框住讓它讀起來像刻意擺放的產品照；黑色陰影在深色模式幾乎看不見，輪廓由邊框負責。第一屏元素，`next/image` 要加 `priority`，並用 `aspect-*` 固定比例避免 CLS。
 
 ### 接案狀態 badge
 
