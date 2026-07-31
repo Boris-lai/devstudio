@@ -1,6 +1,7 @@
 import { AuthStatus } from "@/components/auth/AuthStatus"
 import { Footer } from "@/components/layout/Footer"
 import { Header } from "@/components/layout/Header"
+import { LineFloatingButton } from "@/components/layout/LineFloatingButton"
 import { createClient } from "@/lib/supabase/server"
 
 export default async function SiteLayout({
@@ -21,6 +22,9 @@ export default async function SiteLayout({
         {children}
       </main>
       <Footer />
+
+      {/* 全站固定在右下角。掛在 (site) 而不是 root layout，後台就不會出現 */}
+      <LineFloatingButton />
     </>
   )
 }

@@ -11,6 +11,7 @@ import { getFeaturedProjects } from "@/lib/queries/projects"
 import { getSiteSettings } from "@/lib/queries/site-settings"
 import {
   DEFAULT_OG_IMAGE,
+  LINE_URL,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
@@ -242,7 +243,7 @@ export default async function HomePage() {
             variant="outline"
             className="h-auto rounded-lg px-5.5 py-3"
             nativeButton={false}
-            render={<a href="#">加 LINE 聯絡</a>}
+            render={<a href={LINE_URL}>加 LINE 聯絡</a>}
           />
         </div>
 
