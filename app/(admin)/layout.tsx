@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/auth/is-admin"
 const NAV_ITEMS = [
   { href: "/admin/posts", label: "文章" },
   { href: "/admin/projects", label: "作品" },
+  { href: "/admin/inquiries", label: "詢價" },
 ] as const
 
 /**

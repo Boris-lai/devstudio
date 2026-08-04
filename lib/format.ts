@@ -91,3 +91,28 @@ export function formatPublishedDate(value: string | null): string | null {
 
   return dateFormatter.format(date)
 }
+
+// 同樣寫死 Asia/Taipei，理由見檔案開頭。
+// hour12: false —— 後台在掃「今天早上幾點進來的」，24 小時制不用多想上下午。
+const dateTimeFormatter = new Intl.DateTimeFormat("zh-TW", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+  timeZone: "Asia/Taipei",
+})
+
+/**
+ * 日期加時分（「2026年8月1日 22:05」）。詢價收件匣用 ——
+ * 詢價可能一天來好幾筆，只到日期分不出先後。
+ */
+export function formatDateTime(value: string | null): string | null {
+  if (!value) return null
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return null
+
+  return dateTimeFormatter.format(date)
+}
