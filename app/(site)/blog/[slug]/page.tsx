@@ -9,6 +9,7 @@ import { Markdown } from "@/components/markdown/Markdown"
 import { estimateReadingMinutes, formatPublishedDate } from "@/lib/format"
 import { getPostBySlug } from "@/lib/queries/posts"
 import { absoluteUrl, SITE_NAME } from "@/lib/site"
+import { decodeSlugParam } from "@/lib/slug"
 
 type BlogDetailPageProps = {
   params: Promise<{ slug: string }>
@@ -17,7 +18,8 @@ type BlogDetailPageProps = {
 export async function generateMetadata({
   params,
 }: BlogDetailPageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const post = await getPostBySlug(slug)
 
   if (!post) {
@@ -50,7 +52,8 @@ export async function generateMetadata({
 }
 
 export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const post = await getPostBySlug(slug)
 
   if (!post) {

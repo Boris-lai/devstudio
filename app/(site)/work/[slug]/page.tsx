@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { TechPills } from "@/components/work/TechPills"
 import { getProjectBySlug } from "@/lib/queries/projects"
 import { absoluteUrl } from "@/lib/site"
+import { decodeSlugParam } from "@/lib/slug"
 
 type WorkDetailPageProps = {
   params: Promise<{ slug: string }>
@@ -16,7 +17,8 @@ type WorkDetailPageProps = {
 export async function generateMetadata({
   params,
 }: WorkDetailPageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const project = await getProjectBySlug(slug)
 
   if (!project) {
@@ -61,7 +63,8 @@ function MetaItem({ label, value }: { label: string; value: string | null }) {
 }
 
 export default async function WorkDetailPage({ params }: WorkDetailPageProps) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const project = await getProjectBySlug(slug)
 
   if (!project) {

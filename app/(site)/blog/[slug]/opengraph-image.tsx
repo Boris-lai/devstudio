@@ -4,6 +4,7 @@ import { loadNotoSansTCSubset } from "@/lib/og/font"
 import { OG_CONTENT_TYPE, OG_SIZE, OgCard, ogCardText } from "@/lib/og/template"
 import { getPostBySlug } from "@/lib/queries/posts"
 import { SITE_NAME } from "@/lib/site"
+import { decodeSlugParam } from "@/lib/slug"
 
 export const alt = `文章 | ${SITE_NAME}`
 export const size = OG_SIZE
@@ -14,7 +15,8 @@ export default async function Image({
 }: {
   params: Promise<{ slug: string }>
 }) {
-  const { slug } = await params
+  const { slug: rawSlug } = await params
+  const slug = decodeSlugParam(rawSlug)
   const post = await getPostBySlug(slug)
 
   const card = {

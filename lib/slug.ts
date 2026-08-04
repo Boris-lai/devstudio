@@ -22,3 +22,25 @@ export function slugify(title: string): string {
     .replace(/-{2,}/g, "-")
     .replace(/^-+|-+$/g, "")
 }
+
+/**
+ * 把網址上的 dynamic segment 還原成資料庫裡的 slug。
+ *
+ * **page component 拿到的 params 是還沒解碼的原字串**（route handler 反而是
+ * 解碼過的，兩者不一致，很容易誤判）。中文 slug 在網址上是 percent-encoded，
+ * 不先解碼就會拿 "%E7%B6%B2..." 去比對資料庫，永遠查無資料 → 整篇 404。
+ * 純 ASCII 的 slug 不會踩到，所以只有中文標題的文章會出事。
+ *
+ * 對已經解碼過的字串再解一次是安全的：slugify() 的允許字元裡沒有 %，
+ * 解出來的結果不可能再含有跳脫序列。
+ *
+ * 網址被亂填成 %zz 這種非法序列時 decodeURIComponent 會丟錯，
+ * 這裡接住並回傳原字串，讓它照常查不到、走正常的 404。
+ */
+export function decodeSlugParam(raw: string): string {
+  try {
+    return decodeURIComponent(raw)
+  } catch {
+    return raw
+  }
+}
