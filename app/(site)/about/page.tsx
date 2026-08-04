@@ -8,13 +8,13 @@ import { absoluteUrl, DEFAULT_OG_IMAGE } from "@/lib/site"
 export const metadata: Metadata = {
   title: "關於",
   description:
-    "五年前端工程師經驗，現在以一人全端的形式接案。從形象官網、企業管理系統、自動化表單到手機 App，設計到上線一手包辦。",
+    "三年前端工程師經驗，現在以一人全端的形式接案。從形象官網、企業管理系統、自動化表單到手機 App，設計到上線一手包辦。",
   alternates: { canonical: "/about" },
   openGraph: {
     type: "profile",
     title: "關於 | Boris Lai 的工作室",
     description:
-      "五年前端工程師經驗，現在以一人全端的形式接案。設計到上線一手包辦，溝通不用轉手。",
+      "三年前端工程師經驗，現在以一人全端的形式接案。設計到上線一手包辦，溝通不用轉手。",
     url: absoluteUrl("/about"),
     images: [DEFAULT_OG_IMAGE],
   },
@@ -47,7 +47,7 @@ export default async function AboutPage() {
 
         <div className="flex max-w-170 flex-col gap-4 text-[17px] leading-[1.85] text-muted-foreground">
           <p>
-            你好，我是 Boris Lai，五年前端工程師經驗，現在以一人全端的形式接案。
+            你好，我是 Boris Lai，三年前端工程師經驗，現在以一人全端的形式接案。
             從形象官網、員工管理系統、自動化表單回覆，到手機 App——
             只要你講得出需求，我就想辦法把它做出來。
             一個人從設計到上線全包，溝通不用轉手，成品也更貼近你真正要的樣子。

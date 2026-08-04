@@ -13,7 +13,7 @@ export const SITE_URL =
 export const SITE_NAME = "Boris Lai 的工作室"
 
 export const SITE_DESCRIPTION =
-  "Boris Lai — 五年經驗的一人全端開發者，接案製作形象官網、企業管理系統、自動化表單與手機 App，從設計到上線一手包辦。"
+  "Boris Lai — 三年經驗的一人全端開發者，接案製作形象官網、企業管理系統、自動化表單與手機 App，從設計到上線一手包辦。"
 
 /**
  * 站台預設 OG 圖（由 app/opengraph-image.tsx 產生）。
