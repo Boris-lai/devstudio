@@ -4,6 +4,8 @@ import Link from "next/link"
 
 import { PostCard } from "@/components/blog/PostCard"
 import { EmptyState } from "@/components/EmptyState"
+import { ProcessTimeline } from "@/components/home/ProcessTimeline"
+import { ServiceCards } from "@/components/home/ServiceCards"
 import { Button } from "@/components/ui/button"
 import { ProjectCard } from "@/components/work/ProjectCard"
 import { getLatestPosts } from "@/lib/queries/posts"
@@ -31,7 +33,7 @@ export const metadata: Metadata = {
 }
 
 const PERSON_DESCRIPTION =
-  "五年前端工程師經驗，現在以一人全端的形式接案。從形象官網、員工管理系統、自動化表單回覆到手機 App，設計到上線一手包辦。"
+  "三年前端工程師經驗，現在以一人全端的形式接案。從形象官網、員工管理系統、自動化表單回覆到手機 App，設計到上線一手包辦。"
 
 const HOME_JSON_LD = {
   "@context": "https://schema.org",
@@ -181,6 +183,10 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <ProcessTimeline />
+
+      <ServiceCards />
+
       <section className="flex flex-col gap-8">
         <SectionHeader
           eyebrow="近期案例"
@@ -219,8 +225,25 @@ export default async function HomePage() {
         )}
       </section>
 
-      {/* 結尾 CTA band。LINE 連結還沒拿到，暫時留 # 佔位。 */}
-      <section className="flex flex-col items-center gap-6 border-t border-border bg-muted px-6 py-16 text-center">
+      {/*
+        結尾 CTA band。
+        isolate：底圖用 -z-10 壓在文字後面，沒有這層 stacking context 的話
+        負 z-index 會穿到 section 自己的背景之後、直接掉到頁面底下去。
+      */}
+      <section className="relative isolate flex flex-col items-center gap-6 overflow-hidden border-t border-border bg-muted px-6 py-16 text-center">
+        {/*
+          裝飾用底圖，alt 留空讓螢幕閱讀器跳過。
+          圖是淺色調的，深色模式整張貼上會變成一塊發亮的白 ——
+          壓到 8% 只留波浪與線稿的隱約輪廓，底色仍然交給 bg-muted。
+        */}
+        <Image
+          src="/cta-bg.webp"
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 1024px, 100vw"
+          className="-z-10 object-cover dark:opacity-[0.08]"
+        />
+
         <p className={`${EYEBROW} text-primary`}>開始合作</p>
 
         <div className="flex flex-col items-center gap-4">
