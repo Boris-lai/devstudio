@@ -88,7 +88,7 @@
   --border: #e6e6e1;
   --input: #e6e6e1;
 
-  /* 程式碼區塊底色：亮暗都用 highlight.js github-dark 的深底 */
+  /* 程式碼區塊底色。亮色模式用 github-dark 的深底，深色模式另外調亮，見 .dark */
   --code-bg: #0d1117;
 
   --destructive: oklch(0.577 0.245 27.325);
@@ -134,6 +134,14 @@
   /* 線條 */
   --border: #2f2f2c;
   --input: #2f2f2c;
+
+  /*
+   * 程式碼區塊底色。這裡**不能**沿用亮色模式的 #0d1117 ——
+   * 它跟深色模式的頁面底 #111110 幾乎一樣暗，整塊會溶進背景裡，
+   * 看不出哪裡是程式碼。改用 surface-2（#232322），跟頁面底拉開一階，
+   * 也跟卡片的 #1a1a19 區分得開。
+   */
+  --code-bg: #232322;
 
   --destructive: oklch(0.704 0.191 22.216);
   --chart-1: oklch(0.87 0 0);
@@ -235,10 +243,17 @@
   content: none;
 }
 
-/* 程式碼區塊：容器負責圓角與捲動，配色交給 highlight.js 的 github-dark */
+/*
+ * 程式碼區塊：容器負責圓角、捲動與底色，語法上色交給 highlight.js 的 github-dark。
+ *
+ * 邊框顏色從 --code-bg 混白調出來，而不是用 --border ——
+ * 亮色模式的程式碼區塊是深底，套上淺色的 --border 會變成一圈亮邊；
+ * 混白的做法在亮暗兩邊都只是「比底色亮一階」，自動跟著走。
+ */
 .prose pre {
   position: relative;
   border-radius: 12px;
+  border: 1px solid color-mix(in oklch, var(--code-bg) 84%, white);
   padding: 1rem 1.15rem;
   overflow-x: auto;
 }
