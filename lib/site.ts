@@ -35,7 +35,7 @@ export const DEFAULT_OG_IMAGE = "/opengraph-image"
  * 首頁 CTA band 的「加 LINE 聯絡」與右下角的浮動按鈕都讀這個常數，
  * 集中在一處是為了之後只要改這裡、不用兩邊找。
  */
-export const LINE_URL = "https://line.me/ti/p/c77yrFI4LC"
+export const LINE_URL: string = "https://line.me/ti/p/c77yrFI4LC"
 
 /** 連結還沒設定好，用來決定要不要開新分頁、以及要不要標成外部連結。 */
 export const IS_LINE_URL_SET = LINE_URL !== "#"
