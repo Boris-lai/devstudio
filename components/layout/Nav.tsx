@@ -19,8 +19,10 @@ export const NAV_ITEMS: readonly NavItem[] = [
 /**
  * 目前頁面是否落在某個導覽項目底下。
  * /work/my-case 也要讓「作品」保持 active，所以用前綴比對。
+ *
+ * 手機版的 MobileNav 也要標同一組 active，所以 export 出去共用。
  */
-function isActive(pathname: string, href: string): boolean {
+export function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`)
 }
 
