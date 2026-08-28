@@ -6,6 +6,7 @@ export type AdminStats = {
   posts: number
   projects: number
   inquiries: number
+  subscribers: number
 }
 
 /**
@@ -13,8 +14,8 @@ export type AdminStats = {
  *
  * 用 head: true + count: "exact" 只取數量、不把資料列拉回來。
  *
- * 三個查詢各自獨立處理錯誤並退回 0 —— 後台首頁不該因為某一張表讀不到
- * 就整頁爆掉。inquiries 的 select 政策限 admin，能讀到是因為呼叫端
+ * 每個查詢各自獨立處理錯誤並退回 0 —— 後台首頁不該因為某一張表讀不到
+ * 就整頁爆掉。inquiries／subscribers 的 select 政策限 admin，能讀到是因為呼叫端
  * （(admin)/layout.tsx 的權限門）已經確認過身分，RLS 那側也會再擋一次。
  *
  * 計數包含未發布的內容：admin 的 RLS 政策看得到全部，
@@ -28,15 +29,17 @@ export async function getAdminStats(): Promise<AdminStats> {
 
   const supabase = await createClient()
 
-  const [posts, projects, inquiries] = await Promise.all([
+  const [posts, projects, inquiries, subscribers] = await Promise.all([
     supabase.from("posts").select("*", { count: "exact", head: true }),
     supabase.from("projects").select("*", { count: "exact", head: true }),
     supabase.from("inquiries").select("*", { count: "exact", head: true }),
+    supabase.from("subscribers").select("*", { count: "exact", head: true }),
   ])
 
   return {
     posts: posts.error ? 0 : (posts.count ?? 0),
     projects: projects.error ? 0 : (projects.count ?? 0),
     inquiries: inquiries.error ? 0 : (inquiries.count ?? 0),
+    subscribers: subscribers.error ? 0 : (subscribers.count ?? 0),
   }
 }

@@ -14,6 +14,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/work", label: "作品" },
   { href: "/blog", label: "文章" },
   { href: "/about", label: "關於" },
+  { href: "/template", label: "模板" },
 ] as const
 
 /**
