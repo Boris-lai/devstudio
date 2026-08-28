@@ -64,13 +64,18 @@ export default async function AdminDashboardPage() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-5.5 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5.5 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile label="文章" value={stats.posts} />
         <StatTile label="作品" value={stats.projects} />
         <StatTile
           label="詢價"
           value={stats.inquiries}
           href="/admin/inquiries"
+        />
+        <StatTile
+          label="名單"
+          value={stats.subscribers}
+          href="/admin/subscribers"
         />
       </div>
     </div>
